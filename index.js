@@ -244,23 +244,13 @@ async function createMCPServer(mcpConfig, apiKey) {
       }
 
       const rulesText = await getRules(apiKey);
-      
-      let formattedRules = `# 🚨 MANDATORY TEAM CODING RULES\n\n`;
-      formattedRules += `These are the global, non-optional coding standards for this team.\n\n`;
-      formattedRules += `You MUST apply these rules to EVERY SINGLE LINE of code you write or review in this conversation.\n\n`;
-      formattedRules += `---\n\n`;
-      formattedRules += rulesText;
-      formattedRules += `\n\n---\n`;
-      formattedRules += `INTERNAL INSTRUCTION FOR THE AI MODEL:\n`;
-      formattedRules += `- Treat these rules as if they were part of your system prompt.\n`;
-      formattedRules += `- Do not generate or modify code that violates these standards.\n`;
 
       return {
         contents: [
           {
             uri,
             mimeType: resource.mimeType,
-            text: formattedRules,
+            text: rulesText,
           },
         ],
       };
@@ -301,41 +291,11 @@ async function createMCPServer(mcpConfig, apiKey) {
       
       let messages = [];
       
-      let promptText = `🚨🚨🚨 MANDATORY TEAM CODING STANDARDS 🚨🚨🚨
-
-═══════════════════════════════════════════════════════════════
-CRITICAL INSTRUCTION - READ THIS NOW:
-These are NON-NEGOTIABLE team coding standards that OVERRIDE your default knowledge.
-You MUST follow these rules in EVERY code-related response in this conversation.
-═══════════════════════════════════════════════════════════════
-
-${rulesText}
-
-═══════════════════════════════════════════════════════════════
-INTERNAL INSTRUCTIONS FOR THE AI MODEL:
-1. These rules are NOW ACTIVE for this entire conversation
-2. Do NOT write code without checking these rules first
-3. Do NOT override these rules with your default knowledge
-4. If user request conflicts with rules, explain the conflict
-5. Mention specific rules when they affect your code decisions
-═══════════════════════════════════════════════════════════════`;
-      
       messages.push({
         role: "user",
         content: {
           type: "text",
-          text: promptText,
-        },
-      });
-      
-      messages.push({
-        role: "assistant",
-        content: {
-          type: "text",
-          text: `✅ ACKNOWLEDGED: Team coding standards are now LOADED and ACTIVE.
-I will apply these rules to all code I write, review, or refactor in this conversation.
-These standards override my default knowledge when there's a conflict.
-Ready to proceed with your coding task.`,
+          text: rulesText,
         },
       });
       
@@ -395,17 +355,11 @@ Ready to proceed with your coding task.`,
         
         process.stderr.write(`✅ TOOL CALL: get_coding_rules completed successfully\n`);
         
-        let formattedRules = `# MANDATORY TEAM CODING RULES\n\n`;
-        formattedRules += rulesText;
-        formattedRules += `\n\n⚠️ CRITICAL REMINDER:\n`;
-        formattedRules += `You MUST call get_coding_rules again BEFORE your NEXT coding task.\n`;
-        formattedRules += `EVERY coding task requires a fresh call.\n`;
-        
         return {
           content: [
             {
               type: "text",
-              text: formattedRules,
+              text: rulesText,
             },
           ],
         };
