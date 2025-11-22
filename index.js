@@ -60,7 +60,7 @@ function setCachedData(cacheObj, data) {
   cacheObj.timestamp = Date.now();
 }
 
-async function fetchFromCodesonaAPI(endpoint, method, apiKey, body = null) {
+async function makeAPIRequest(endpoint, method, apiKey, body = null) {
   const keyPrefix = apiKey.substring(0, 12);
   const timestamp = new Date().toISOString();
   
@@ -186,7 +186,7 @@ async function getRules(apiKey, codeContext = null) {
       }
     };
 
-    const rulesText = await fetchFromCodesonaAPI('/api/v1/dynamic-rules', 'POST', apiKey, body);
+    const rulesText = await makeAPIRequest('/api/v1/dynamic-rules', 'POST', apiKey, body);
     
     setCachedData(cache, rulesText);
     process.stderr.write(`✓ Fetched rules from API\n`);
@@ -395,7 +395,7 @@ async function createMCPServer(mcpConfig, apiKey) {
           goodExampleCode: goodExampleCode || null
         };
         
-        const result = await fetchFromCodesonaAPI(tool.config.endpoint, tool.config.method, apiKey, payload);
+        const result = await makeAPIRequest(tool.config.endpoint, tool.config.method, apiKey, payload);
         
         process.stderr.write(`✅ Rule suggestion sent: ${result.suggestionId}\n`);
         
@@ -403,7 +403,7 @@ async function createMCPServer(mcpConfig, apiKey) {
           content: [
             {
               type: "text",
-              text: `✓ Rule suggestion sent successfully!\n\nSuggestion ID: ${result.suggestionId}\nStatus: ${result.status}\n\n${result.message}`,
+              text: typeof result === 'string' ? result : (result.message || JSON.stringify(result)),
             },
           ],
         };
