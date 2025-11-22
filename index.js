@@ -158,6 +158,17 @@ async function getMcpConfig(apiKey) {
     }
 
     const config = await response.json();
+    
+    // Debug: Config içeriğini logla
+    process.stderr.write(`[MCP_CONFIG] Resources count: ${config.resources?.length || 0}\n`);
+    if (config.resources && config.resources.length > 0) {
+      config.resources.forEach((r, idx) => {
+        process.stderr.write(`[MCP_CONFIG]   Resource ${idx + 1}: ${r.uri}\n`);
+        process.stderr.write(`[MCP_CONFIG]     - Has content: ${!!r.content}\n`);
+        process.stderr.write(`[MCP_CONFIG]     - Content length: ${r.content?.length || 0}\n`);
+      });
+    }
+    
     setCachedData(configCache, config);
     process.stderr.write(`[MCP_CONFIG] ✓ Fetched MCP config from API\n`);
     return config;
@@ -243,6 +254,26 @@ async function createMCPServer(mcpConfig, apiKey) {
         throw new Error(`Unknown resource URI: ${uri}`);
       }
 
+      process.stderr.write(`[RESOURCE READ] URI: ${uri}\n`);
+      process.stderr.write(`[RESOURCE READ] Has content field: ${!!resource.content}\n`);
+      process.stderr.write(`[RESOURCE READ] Content length: ${resource.content?.length || 0}\n`);
+
+      // Eğer resource'da content varsa direkt onu dön
+      if (resource.content) {
+        process.stderr.write(`[RESOURCE READ] ✓ Returning content from config\n`);
+        return {
+          contents: [
+            {
+              uri,
+              mimeType: resource.mimeType,
+              text: resource.content,
+            },
+          ],
+        };
+      }
+
+      // Content yoksa API'den kuralları çek (standart davranış)
+      process.stderr.write(`[RESOURCE READ] ⚠ No content in config, fetching from API\n`);
       const rulesText = await getRules(apiKey);
 
       return {

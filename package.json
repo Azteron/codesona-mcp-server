@@ -1,6 +1,6 @@
 {
   "name": "@codesona/mcp-server",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "MCP server for enforcing team coding standards via AI assistants in Cursor, Windsurf and other MCP-compatible IDEs",
   "main": "index.js",
   "type": "module",
