@@ -1,0 +1,52 @@
+{
+  "name": "@codesona/mcp-server",
+  "version": "0.1.4",
+  "description": "MCP server for enforcing team coding standards via AI assistants in Cursor, Windsurf and other MCP-compatible IDEs",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "codesona-mcp-server": "index.js"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "coding-standards",
+    "team-rules",
+    "cursor",
+    "windsurf",
+    "vscode",
+    "visual-studio-code",
+    "claude-desktop",
+    "claude-code",
+    "continue",
+    "aider",
+    "cody",
+    "codeium",
+    "ai-assistant",
+    "code-quality",
+    "linting",
+    "standards"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Azteron/codesona-mcp-server"
+  },
+  "bugs": "https://codesona.ai",
+  "homepage": "https://codesona.ai",
+  "author": "Codesona",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}
