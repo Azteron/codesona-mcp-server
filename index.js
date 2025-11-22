@@ -347,13 +347,13 @@ async function createMCPServer(mcpConfig, apiKey) {
         throw new Error(`Unknown tool: ${name}`);
       }
 
-      if (tool.name === "get_coding_rules") {
-        process.stderr.write(`🚨 TOOL CALL: get_coding_rules invoked\n`);
+      if (tool.name === "load_coding_rules") {
+        process.stderr.write(`🚨 TOOL CALL: load_coding_rules invoked\n`);
         
         const codeContext = args?.codeContext;
         const rulesText = await getRules(apiKey, codeContext);
         
-        process.stderr.write(`✅ TOOL CALL: get_coding_rules completed successfully\n`);
+        process.stderr.write(`✅ TOOL CALL: load_coding_rules completed successfully\n`);
         
         return {
           content: [
